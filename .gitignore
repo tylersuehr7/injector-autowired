@@ -1,0 +1,30 @@
+# Editor / IDE / OS
+.DS_Store
+.vscode/
+.cursor/
+.idea/
+.claude/
+
+# Python bytecode
+**/*.pyc
+**/__pycache__/
+
+# Virtual envs + lockfiles
+.venv/
+uv.lock
+
+# Tool caches
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+src/*.egg-info/
+
+# Coverage
+.coverage
+coverage.xml
+htmlcov/
