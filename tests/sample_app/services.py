@@ -1,15 +1,15 @@
-from injector_autowired import provider, service
+from injector_autowired import component, provider
 
 from . import Clock, Greeter, Settings
 
 
-@service(bind=Clock)
+@component(bind=Clock)
 class SystemClock(Clock):
     def now(self) -> str:
         return "now"
 
 
-@service(bind=Greeter)
+@component(bind=Greeter)
 class HelloGreeter(Greeter):
     def __init__(self, clock: Clock):  # autowired, no @inject
         self.clock = clock

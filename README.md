@@ -12,17 +12,17 @@ package, and get a fully wired container back. No hand-written `Module`
 subclasses, no `binder.bind(...)` calls.
 
 ```python
-from injector_autowired import service, provider, scan, inject
+from injector_autowired import component, provider, scan, inject
 
 class Clock:
     def now(self) -> str: ...
 
-@service(bind=Clock)
+@component(bind=Clock)
 class SystemClock(Clock):
     def now(self) -> str:
         return "2026-07-12T00:00:00Z"
 
-@service
+@component
 class InvoiceService:
     def __init__(self, clock: Clock):     # autowired — no @inject needed
         self.clock = clock
@@ -69,16 +69,25 @@ Resolve things with `container.get(T)`, or globally with `resolve(T)`.
 
 | Decorator | Marks | Notes |
 |-----------|-------|-------|
-| `@component` | a class | Base marker. `@service`, `@repository`, `@controller`, `@adapter` are identical aliases that read better at call sites. |
+| `@component` | a class | Marks the class for construction by the container. |
 | `@provider` | a factory function | Builds the instance itself; use for conditional or logic-heavy construction. The interface comes from the return annotation (or `provides=`). |
 
 Both wire dependencies automatically: a plain type-annotated `__init__` (or
 factory signature) has its parameters injected for you.
 
+`@component` and `@provider` are the only two concepts. If your project prefers
+layer-specific names, alias them yourself:
+
+```python
+from injector_autowired import component
+
+service = repository = component
+```
+
 ### Binding an interface
 
 ```python
-@service(bind=Clock)
+@component(bind=Clock)
 class SystemClock(Clock): ...
 ```
 
@@ -112,10 +121,10 @@ always active; otherwise it is active when **any** of its profiles matches.
 Prefix with `!` to mean "active unless this profile is on".
 
 ```python
-@service(bind=Notifier, profiles=["prod"])
+@component(bind=Notifier, profiles=["prod"])
 class EmailNotifier(Notifier): ...
 
-@service(bind=Notifier, profiles=["!prod"])
+@component(bind=Notifier, profiles=["!prod"])
 class ConsoleNotifier(Notifier): ...
 
 scan("myapp", profiles=["prod"]).get(Notifier)   # -> EmailNotifier
@@ -138,10 +147,10 @@ Register several implementations of one interface with `name=`, then resolve by
 name — or fetch them all:
 
 ```python
-@adapter(bind=BookingProvider, name="fareharbor")
+@component(bind=BookingProvider, name="fareharbor")
 class FareHarborProvider(BookingProvider): ...
 
-@adapter(bind=BookingProvider, name="peek")
+@component(bind=BookingProvider, name="peek")
 class PeekProvider(BookingProvider): ...
 
 container.get(BookingProvider, name="peek")   # one of them

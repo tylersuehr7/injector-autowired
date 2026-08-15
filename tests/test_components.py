@@ -10,10 +10,7 @@ from injector_autowired import (
     Scope,
     build,
     component,
-    controller,
     inject,
-    repository,
-    service,
 )
 
 
@@ -51,7 +48,7 @@ def test_bind_makes_class_resolvable_as_interface():
         def now(self) -> str:
             raise NotImplementedError
 
-    @service(bind=Clock, into=reg)
+    @component(bind=Clock, into=reg)
     class SystemClock(Clock):
         def now(self) -> str:
             return "tick"
@@ -67,11 +64,11 @@ def test_interface_is_injected_into_dependents():
     class Repo:
         pass
 
-    @repository(bind=Repo, into=reg)
+    @component(bind=Repo, into=reg)
     class SqlRepo(Repo):
         pass
 
-    @service(into=reg)
+    @component(into=reg)
     class UseCase:
         @inject
         def __init__(self, repo: Repo):
@@ -155,24 +152,3 @@ def test_unknown_scope_is_rejected_at_decoration():
         @component(scope="request")  # not a real scope
         class Bad:
             pass
-
-
-def test_aliases_behave_like_component():
-    reg = Registry()
-
-    @service(into=reg)
-    class A:
-        pass
-
-    @repository(into=reg)
-    class B:
-        pass
-
-    @controller(into=reg)
-    class C:
-        pass
-
-    container = build(reg.all())
-    assert isinstance(container.get(A), A)
-    assert isinstance(container.get(B), B)
-    assert isinstance(container.get(C), C)
