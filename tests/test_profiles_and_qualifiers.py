@@ -10,7 +10,6 @@ from injector_autowired import (
     build,
     component,
     provider,
-    service,
 )
 
 
@@ -20,12 +19,12 @@ class Notifier:
 
 
 def _two_notifiers(reg: Registry) -> None:
-    @service(bind=Notifier, profiles=["prod"], into=reg)
+    @component(bind=Notifier, profiles=["prod"], into=reg)
     class EmailNotifier(Notifier):
         def send(self) -> str:
             return "email"
 
-    @service(bind=Notifier, profiles=["test"], into=reg)
+    @component(bind=Notifier, profiles=["test"], into=reg)
     class NullNotifier(Notifier):
         def send(self) -> str:
             return "noop"
@@ -55,7 +54,7 @@ def test_unprofiled_component_is_always_active():
 def test_negated_profile():
     reg = Registry()
 
-    @service(bind=Notifier, profiles=["!test"], into=reg)
+    @component(bind=Notifier, profiles=["!test"], into=reg)
     class RealNotifier(Notifier):
         def send(self) -> str:
             return "real"
@@ -91,12 +90,12 @@ def test_conditional_provider_by_profile():
 def test_two_active_unqualified_implementations_raise():
     reg = Registry()
 
-    @service(bind=Notifier, into=reg)
+    @component(bind=Notifier, into=reg)
     class A(Notifier):
         def send(self) -> str:
             return "a"
 
-    @service(bind=Notifier, into=reg)
+    @component(bind=Notifier, into=reg)
     class B(Notifier):
         def send(self) -> str:
             return "b"
@@ -108,12 +107,12 @@ def test_two_active_unqualified_implementations_raise():
 def test_two_implementations_with_the_same_name_raise():
     reg = Registry()
 
-    @service(bind=Notifier, name="primary", into=reg)
+    @component(bind=Notifier, name="primary", into=reg)
     class A(Notifier):
         def send(self) -> str:
             return "a"
 
-    @service(bind=Notifier, name="primary", into=reg)
+    @component(bind=Notifier, name="primary", into=reg)
     class B(Notifier):
         def send(self) -> str:
             return "b"
@@ -125,12 +124,12 @@ def test_two_implementations_with_the_same_name_raise():
 def test_named_qualifiers_disambiguate():
     reg = Registry()
 
-    @service(bind=Notifier, name="email", into=reg)
+    @component(bind=Notifier, name="email", into=reg)
     class EmailNotifier(Notifier):
         def send(self) -> str:
             return "email"
 
-    @service(bind=Notifier, name="sms", into=reg)
+    @component(bind=Notifier, name="sms", into=reg)
     class SmsNotifier(Notifier):
         def send(self) -> str:
             return "sms"
@@ -143,12 +142,12 @@ def test_named_qualifiers_disambiguate():
 def test_unnamed_resolve_with_only_named_is_ambiguous():
     reg = Registry()
 
-    @service(bind=Notifier, name="email", into=reg)
+    @component(bind=Notifier, name="email", into=reg)
     class EmailNotifier(Notifier):
         def send(self) -> str:
             return "email"
 
-    @service(bind=Notifier, name="sms", into=reg)
+    @component(bind=Notifier, name="sms", into=reg)
     class SmsNotifier(Notifier):
         def send(self) -> str:
             return "sms"
@@ -160,7 +159,7 @@ def test_unnamed_resolve_with_only_named_is_ambiguous():
 def test_missing_named_component_raises():
     reg = Registry()
 
-    @service(bind=Notifier, name="email", into=reg)
+    @component(bind=Notifier, name="email", into=reg)
     class EmailNotifier(Notifier):
         def send(self) -> str:
             return "email"
@@ -172,12 +171,12 @@ def test_missing_named_component_raises():
 def test_get_all_returns_every_implementation():
     reg = Registry()
 
-    @service(bind=Notifier, name="email", into=reg)
+    @component(bind=Notifier, name="email", into=reg)
     class EmailNotifier(Notifier):
         def send(self) -> str:
             return "email"
 
-    @service(bind=Notifier, name="sms", into=reg)
+    @component(bind=Notifier, name="sms", into=reg)
     class SmsNotifier(Notifier):
         def send(self) -> str:
             return "sms"
@@ -192,12 +191,12 @@ def test_get_all_returns_every_implementation():
 def test_named_and_unnamed_coexist():
     reg = Registry()
 
-    @service(bind=Notifier, into=reg)
+    @component(bind=Notifier, into=reg)
     class Default(Notifier):
         def send(self) -> str:
             return "default"
 
-    @service(bind=Notifier, name="sms", into=reg)
+    @component(bind=Notifier, name="sms", into=reg)
     class SmsNotifier(Notifier):
         def send(self) -> str:
             return "sms"

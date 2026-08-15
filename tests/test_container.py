@@ -11,7 +11,6 @@ from injector_autowired import (
     component,
     provider,
     scan,
-    service,
 )
 
 
@@ -36,7 +35,7 @@ def test_injector_property_exposes_the_native_container():
 def test_component_and_provider_claiming_one_interface_collide():
     reg = Registry()
 
-    @service(bind=Clock, into=reg)
+    @component(bind=Clock, into=reg)
     class SystemClock(Clock):
         def now(self) -> str:
             return "tick"
@@ -52,7 +51,7 @@ def test_component_and_provider_claiming_one_interface_collide():
 def test_get_all_keys_unnamed_by_class_name():
     reg = Registry()
 
-    @service(bind=Clock, into=reg)
+    @component(bind=Clock, into=reg)
     class SystemClock(Clock):
         def now(self) -> str:
             return "tick"

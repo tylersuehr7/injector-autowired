@@ -6,6 +6,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Released]
 
+## [2.0.0] - 2026-08-15
+
+### Removed
+
+- **Breaking:** the Spring-style aliases `@service`, `@repository`,
+  `@controller`, and `@adapter`. `@component` and `@provider` are now the only
+  registration concepts; projects that want layer-specific names can alias
+  `component` themselves (`service = component`).
+
+## [Released]
+
 ## [1.0.0] - 2026-07-13
 
 ### Added

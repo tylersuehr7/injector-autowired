@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "injector-autowired"
-version = "1.0.0"
+version = "2.0.0"
 description = "Spring-Boot-style autowiring (component scanning) for the Python injector library."
 readme = "README.md"
 license = { text = "MIT" }

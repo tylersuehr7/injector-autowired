@@ -1,11 +1,10 @@
 """Decorators that mark things for autowiring, and the registry they populate.
 
 This module is the developer-facing surface of the library. Decorating a class
-with :func:`component` (or a Spring-style alias such as :func:`service`) or a
-factory function with :func:`provider` records a :class:`Registration` in a
-:class:`Registry`. A later :func:`~injector_autowired.container.scan` imports the
-modules so the decorators run, then turns the collected registrations into an
-``injector`` container.
+with :func:`component` or a factory function with :func:`provider` records a
+:class:`Registration` in a :class:`Registry`. A later
+:func:`~injector_autowired.container.scan` imports the modules so the decorators
+run, then turns the collected registrations into an ``injector`` container.
 
 The module deliberately contains no scanning or container-construction logic, so
 the decorators can be unit-tested in isolation and reused by any framework.
@@ -118,7 +117,7 @@ def _auto_inject_class(cls: type) -> None:
 
 
 # --------------------------------------------------------------------------- #
-# @component and its Spring-style aliases
+# @component — decorated classes
 # --------------------------------------------------------------------------- #
 
 
@@ -175,13 +174,6 @@ def component[C: type](
         return decorated
 
     return wrap(cls) if cls is not None else wrap
-
-
-# Intent-revealing aliases (Spring-style): identical behavior, clearer at call sites.
-service = component
-repository = component
-controller = component
-adapter = component
 
 
 # --------------------------------------------------------------------------- #

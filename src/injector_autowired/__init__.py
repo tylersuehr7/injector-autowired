@@ -4,12 +4,12 @@ Mark classes and factories with decorators, then call :func:`scan` once at
 startup — no manual modules or bindings::
 
     # billing/services.py
-    from injector_autowired import service, provider, inject
+    from injector_autowired import component, provider, inject
 
-    @service(bind=Clock)
+    @component(bind=Clock)
     class SystemClock(Clock): ...
 
-    @service
+    @component
     class InvoiceService:
         @inject
         def __init__(self, clock: Clock): ...
@@ -47,13 +47,9 @@ from .errors import (
 from .registry import (
     Registration,
     Registry,
-    adapter,
     component,
-    controller,
     provider,
     registry,
-    repository,
-    service,
 )
 from .scopes import Scope, resolve_scope
 
@@ -66,10 +62,6 @@ __all__ = [
     "Container",
     # decorators
     "component",
-    "service",
-    "repository",
-    "controller",
-    "adapter",
     "provider",
     # registry
     "Registration",
